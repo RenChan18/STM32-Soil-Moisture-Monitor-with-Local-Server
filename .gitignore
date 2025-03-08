@@ -1,5 +1,1 @@
-*.o
-*.a
-*.elf
-*.bin
-*.hex
+build/*
