@@ -1,12 +1,8 @@
-# Makefile для проекта с каталогами src и include
-
-BINARY       = src/main
+BINARY       = $(BUILD_DIR)/main
 SRC_DIR      = src
 BUILD_DIR    = build
 INC_DIR      = include
 SRCFILES     := $(wildcard $(SRC_DIR)/*.c)
-
-
 
 PREFIX       ?= arm-none-eabi
 TOP_DIR      := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
@@ -34,7 +30,6 @@ CSTD        ?= -std=c99
 DEFS += -DBEGIN_DECLS= -DEND_DECLS=
 TGT_CPPFLAGS += -include stdbool.h
 
-
 OBJS         := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCFILES))
 DEPS         := $(OBJS:.o=.d)
 LDSCRIPT    ?= $(TOP_DIR)/linker.ld
@@ -50,12 +45,8 @@ TGT_CFLAGS   += -I$(OPENCM3_DIR)/include
 TGT_CPPFLAGS += -MD -Wall -Wundef $(DEFS)
 TGT_CPPFLAGS += -I$(OPENCM3_DIR)/include -I$(INC_DIR)
 
-#TGT_LDFLAGS  += --static -nostartfiles -T$(LDSCRIPT)
 TGT_LDFLAGS   = --static -nostartfiles -T$(LDSCRIPT) $(ARCH_FLAGS) \
-                -Wl,-Map=$(BUILD_DIR)/$(BINARY).map -Wl,--gc-sections
-
-TGT_LDFLAGS  += $(ARCH_FLAGS)
-TGT_LDFLAGS  += -Wl,-Map=$(@:.elf=.map) -Wl,--gc-sections
+                -Wl,-Map=$(BINARY).map -Wl,--gc-sections
 
 LDLIBS      += -specs=nosys.specs
 LDLIBS      += -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
@@ -65,13 +56,9 @@ LDLIBS      += -L$(OPENCM3_DIR)/lib -lopencm3_stm32f4
 
 all: $(BINARY).elf
 
-#%.o: %.c
-#	$(CC) $(TGT_CFLAGS) $(TGT_CPPFLAGS) -c $< -o $@
-# Правило для создания каталога build, если его нет
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-# Компиляция исходного файла в объектный файл в каталоге build
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
 	$(CC) $(TGT_CFLAGS) $(TGT_CPPFLAGS) -c $< -o $@
 
@@ -100,5 +87,4 @@ bigflash: $(BINARY).bin
 clean:
 	rm -rf $(BUILD_DIR) $(BINARY).elf $(BINARY).bin $(BINARY).hex $(BINARY).srec $(BINARY).list
 
--include $(OBJS:.o=.d")"
-
+-include $(OBJS:.o=.d")
