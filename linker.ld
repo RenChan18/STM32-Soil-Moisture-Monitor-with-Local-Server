@@ -17,12 +17,12 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* Linker script for ST STM32F103C8T6 */
+/* Linker script for ST STM32F411VETx */
 
 MEMORY
 {
-	rom (rx) : ORIGIN = 0x08000000, LENGTH = 64K
-	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 20K
+	rom (rx) : ORIGIN = 0x08000000, LENGTH = 512K
+	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 128K
 }
 
 /* Enforce emmition of the vector table. */
