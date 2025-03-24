@@ -1,7 +1,4 @@
 #include "soil.h"
-#include <libopencm3/stm32/f4/gpio.h>
-#include <libopencm3/stm32/f4/adc.h>
-#include <libopencm3/stm32/f4/rcc.h>
 
 #define MAX_DRYNESS 4095
 

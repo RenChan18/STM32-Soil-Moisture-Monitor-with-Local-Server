@@ -1,5 +1,4 @@
 #include "lcd1602.h"
-#include <libopencm3/stm32/f4/i2c.h>
 
 static void lcd1602_write_byte(uint32_t i2c, uint8_t byte, uint8_t flag) {
     uint8_t transaction[6] = {0};
