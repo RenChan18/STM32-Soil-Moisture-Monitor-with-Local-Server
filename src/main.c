@@ -1,14 +1,10 @@
 #include <stdio.h>
 
-#include "delay.h"
-#include "i2c_init.h"
+#include "periphery.h"
 #include "lcd1602.h"
 #include "soil.h"
 #include "send_log.h"
-#include "periphery.h"
 
-#define GREEN_LED GPIO12
-#define BUFFER_SIZE 64
 
 
 static void start_periphery() {
