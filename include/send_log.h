@@ -1,9 +1,9 @@
-#ifndef SEND_LOG
-#define SEND_LOG
+#ifndef SEND_LOG_H
+#define SEND_LOG_H
 
-#include <libopencm3/stm32/usart.h>
+#include "periphery.h"
 
-void usart_setup(void);
-void usart_transmit(const char *str);
+void create_log(char *buf, size_t buf_size);
+void print_log_queue(const char *log);
+#endif // SEND_LOG_H
 
-#endif // SEND_LOG
