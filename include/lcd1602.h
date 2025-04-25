@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include <libopencm3/stm32/f4/i2c.h>
+#include "periphery.h"
 
 #define LCD1602_ADDR      0x27
 #define LCD1602_BACKLIGHT 0x08
