@@ -1,9 +1,7 @@
 #include <stdio.h>
 
-#include "periphery.h"
 #include "lcd1602.h"
-#include "soil.h"
-#include "send_log.h"
+#include "app_log.h"
 
 
 

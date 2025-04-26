@@ -1,5 +1,5 @@
-#ifndef LOG_ENGINE_H
-#define LOG_ENGINE_H
+#ifndef APP_LOG_H
+#define APP_LOG_H
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -23,6 +23,9 @@ static QueueHandle_t xLogData;
 static void scan_solid_task(void *unused);
 static void logger_task(void *unused);
 static void usart_tx_task(void *unused); 
+void start_app();
 
-#endif // LOG_ENGINE_H
+void create_log(char *buf, size_t buf_size);
+void print_log_queue(const char *log);
+#endif // APP_LOG_H
 
