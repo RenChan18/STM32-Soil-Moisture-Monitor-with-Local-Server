@@ -2,23 +2,26 @@
 
 #include "lcd1602.h"
 #include "app_log.h"
+//#include "delay.h"
 
 
-
-static void start_periphery() {
+static void start_periphery(void) {
     clock_setup();
     gpio_setup();
     usart_setup();
     i2c_setup();
-    adc_setup();
     dwt_setup();
+    adc_setup();
 
-    lcd1602_setup(I2C1);
+    //lcd1602_setup(I2C1);
 }
 
 
 int main(void) {
-    volatile uint8_t wet_or_dry = 0;
+    start_periphery();
+    start_app();
+    while(1){};
+    /*volatile uint8_t wet_or_dry = 0;
     volatile uint16_t humidity_level = 0;
     char str[20];
     const char fstr[] = "Humidity is ";
@@ -38,7 +41,7 @@ int main(void) {
             lcd1602_print_string(I2C1, LCD1602_LINE_2, third);
         }
         usart_transmit(third);
-        dwt_delay_ms(10000);
-    }
+       // dwt_delay_ms(10000);
+    }*/
 }
 
