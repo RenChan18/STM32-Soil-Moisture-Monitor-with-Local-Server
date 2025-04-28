@@ -73,6 +73,9 @@ $(BUILD_DIR)/$(RTOS_SUBDIR):
 $(BUILD_DIR)/$(RTOS_SUBDIR)/%.o: $(SRC_DIR)/$(RTOS_SUBDIR)/%.c | $(BUILD_DIR)/$(RTOS_SUBDIR)
 	$(CC) $(TGT_CFLAGS) $(TGT_CPPFLAGS) -c $< -o $@
 
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
+	$(CC) $(TGT_CFLAGS) $(TGT_CPPFLAGS) -c $< -o $@
+
 $(BINARY).elf: $(OBJS) $(LDSCRIPT)
 	$(LD) $(TGT_LDFLAGS) $(OBJS) $(LDLIBS) -o $@
 	$(SIZE) $@
@@ -97,5 +100,5 @@ bigflash: $(BINARY).bin
 
 clean:
 	rm -rf $(BUILD_DIR) $(BINARY).elf $(BINARY).bin $(BINARY).hex $(BINARY).srec $(BINARY).list
-
--include $(OBJS:.o=.d")
+-include $(DEPS)include $(DEPS)
+#-include $(OBJS:.o=.d")
