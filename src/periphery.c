@@ -19,14 +19,14 @@ void adc_setup(void) {
 
     adc_power_off(ADC1);
     adc_disable_scan_mode(ADC1);
-    adc_set_single_conversion_mode(ADC1);:
+    adc_set_single_conversion_mode(ADC1);
    
     uint8_t channels[1] = { ADC_CHANNEL0 };
     adc_set_regular_sequence(ADC1, 1, channels);
 
     adc_set_sample_time(ADC1, ADC_CHANNEL0, ADC_SMPR_SMP_28CYC);
     adc_power_on(ADC1);
-    dwt_delay_us(10);
+    dwt_delay_us(1);
 }
 
 void gpio_setup(void) {
