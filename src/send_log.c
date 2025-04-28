@@ -10,12 +10,13 @@ void create_log(char *buf, size_t buf_size, DataSoil_t curr_humidity) {
     memcpy(buf, prefix, prefix_len);
     buf+= prefix_len;
     buf_size -= prefix_len;
-
-    if (curr_humidity.humidity_lvl == 0) {
+    
+    int num = curr_humidity.humidity_lvl;
+    if (num == 0) {
         *buf++ = '0';
     } else {
         char tmp[10];
-        int i = 0;
+        unsigned int i = 0;
         while (num > 0 && sizeof(tmp)-1) {
             tmp[i++] = '0' + (num % 10);
             num /= 10;

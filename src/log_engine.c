@@ -1,6 +1,11 @@
 #include "app_log.h"
+#include "stdio.h"
+
+QueueHandle_t xLogData = NULL;
+QueueHandle_t xHumData = NULL;
 
 static void scan_solid_task(void *unused) {
+    (void)unused;
     DataSoil_t actual_data = {0,0};
 
     while(1) {
@@ -13,6 +18,7 @@ static void scan_solid_task(void *unused) {
 }
 
 static void logger_task(void *unused) {
+    (void)unused;
     char log[BUFFER_SIZE] = {0};
     DataSoil_t received_data;
 
@@ -27,22 +33,34 @@ static void logger_task(void *unused) {
 }
 
 static void usart_tx_task(void *unused) {
+    (void)unused;
     char c;
     while(1) {
         if(xQueueReceive(xLogData, &c, portMAX_DELAY) == pdPASS) {
             while (!usart_get_flag(USART2, USART_SR_TXE));
-            usart_send(USART2, ch);
+            usart_send(USART2, c);
         }
     }
 }
 
-static void start_app() {  
-    xHumData = xQueueCreate(128, sizeof(DataSoil_t));
-    xLogData = xQueueCreate(128, sizeof(DataSoil_t));
+void start_app(void) {
+    // Создаем очереди с проверкой
+    xHumData = xQueueCreate(32, sizeof(DataSoil_t));
+    xLogData = xQueueCreate(128, sizeof(char));  // Для USART достаточно 128 символов
     
-    xTaskCreate(scan_solid_task, "scan_solid", 256, NULL, tskIDLE_PRIORITY+1, NULL);
-    xTaskCreate(logger_task, "logger", 256, NULL, tskIDLE_PRIORITY+1, NULL);
-    xTaskCreate(usart_tx_task, "uart_tx", 256, NULL, tskIDLE_PRIORITY+1, NULL);
-    vTaskStartSheduler();
+    /*if (xHumData == NULL) {
+    printf("ERROR: xHumData NULL\r\n");
+    while(1);
+    }
+    if (xLogData == NULL) {
+    printf("ERROR: xLogData NULL\r\n");
+    while(1);
+    }*/
+    // Увеличиваем размер стека
+    xTaskCreate(scan_solid_task, "scan_solid", 128, NULL, tskIDLE_PRIORITY+4, NULL);
+    xTaskCreate(logger_task, "logger", 128, NULL, tskIDLE_PRIORITY+2, NULL);
+    xTaskCreate(usart_tx_task, "uart_tx", 128, NULL, tskIDLE_PRIORITY+1, NULL);
+    
+    vTaskStartScheduler();
 }
 
