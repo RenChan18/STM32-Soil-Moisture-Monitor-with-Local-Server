@@ -1,30 +1,45 @@
 # STM32-Soil-Moisture-Monitor-with-Local-Server
 As part of the project, an IoT device is being developed to measure soil moisture and transmit data to a local server via Wi-Fi. The data can be viewed through a web interface or a mobile application.
 
-## Description
+Here’s the English translation of your project description and build instructions:
 
-At the moment, the basic functionality has been implemented, which allows:
-- Read data from the soil moisture sensor.
-- Display this data on the LCD display.
-- Send data via UART to a PC.
+---
 
-In the future, the project will be complemented by Wi-Fi connectivity for remote monitoring and management.
+## Description  
 
-## Assembly
+The current implementation includes core functionality that enables:  
+- Reading soil moisture sensor data.  
+- Displaying this data on an LCD screen (*temporarily unavailable after switching to FreeRTOS; implementation exists in earlier versions*).  
+- Sending logs via UART to a PC (*timestamps are currently static; RTC module integration pending*).  
 
-To build the project, **libopencm3** is used to work with the STM32 microcontroller. The project uses a Makefile to manage the build process.
+Future updates will introduce Wi-Fi connectivity for remote monitoring and control.  
 
-1. Clone the repository.
-   ```bash
-   git clone --recursive git@github.com:RenChan18/STM32-Soil-Moisture-Monitor-with-Local-Server.git
-   ```
-2. Make sure that you have the following dependencies installed:
-- GCC for ARM (arm-none-eabi)
-- Make
-3. Assemble the project using the command:
-   ```bash
-   make
-   ```
+## Building  
+
+The project uses **libopencm3** for STM32 microcontroller support and a **Makefile** for build automation.  
+
+1. Clone the repository:  
+   ```bash  
+   git clone --recursive git@github.com:RenChan18/STM32-Soil-Moisture-Monitor-with-Local-Server.git  
+   ```  
+2. Ensure the following dependencies are installed:  
+   - ARM GCC (`arm-none-eabi`)  
+   - Make  
+   - FreeRTOS  
+3. Build the project:  
+   ```bash  
+   make  
+   ```  
+4. Flash the firmware to the microcontroller:  
+   ```bash  
+   make flash  
+   ```  
+5. Monitor logs using `minicom`:  
+   ```bash  
+   sudo minicom -D /dev/ttyUSB0 -b 9600 -o -L  
+   ```  
+
+---
 
 ## Connections
 
