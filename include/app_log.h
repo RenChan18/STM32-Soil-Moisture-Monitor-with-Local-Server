@@ -15,15 +15,12 @@
 
 typedef struct {
     uint8_t is_wet;
-    uint16_t humidity_lvl;
+    uint8_t humidity_lvl;
 } DataSoil_t;
 
 extern QueueHandle_t xHumData;
 extern QueueHandle_t xLogData;
 
-/*static void scan_solid_task(void *unused);
-static void logger_task(void *unused);
-static void usart_tx_task(void *unused); */
 void start_app(void);
 
 void create_log(char *buf, size_t buf_size, DataSoil_t curr_humidity);
