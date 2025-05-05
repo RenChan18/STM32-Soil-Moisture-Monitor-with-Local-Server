@@ -11,6 +11,8 @@
 #include "delay.h"
 
 #define GREEN_LED GPIO12
+#define ORANGE_LED GPIO13
+
 #define BAUD_RATE 9600
 
 void clock_setup(void);
