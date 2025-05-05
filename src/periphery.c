@@ -5,18 +5,16 @@ void clock_setup(void) {
     rcc_wait_for_osc_ready(RCC_HSE);
     rcc_set_sysclk_source(RCC_HSE);
 
-    rcc_periph_clock_enable(RCC_GPIOB);
-    rcc_periph_clock_enable(RCC_I2C1);
     rcc_periph_clock_enable(RCC_GPIOA);
+    rcc_periph_clock_enable(RCC_GPIOB);
+    rcc_periph_clock_enable(RCC_GPIOD);
+
+    rcc_periph_clock_enable(RCC_I2C1);
     rcc_periph_clock_enable(RCC_USART2);
+    rcc_periph_clock_enable(RCC_ADC1);
 }
 
 void adc_setup(void) {
-    rcc_periph_clock_enable(RCC_ADC1);
-    rcc_periph_clock_enable(RCC_GPIOA);
-
-    gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO0);
-
     adc_power_off(ADC1);
     adc_disable_scan_mode(ADC1);
     adc_set_single_conversion_mode(ADC1);
@@ -26,7 +24,7 @@ void adc_setup(void) {
 
     adc_set_sample_time(ADC1, ADC_CHANNEL0, ADC_SMPR_SMP_28CYC);
     adc_power_on(ADC1);
-    dwt_delay_us(1);
+    dwt_delay_us(10);
 }
 
 void gpio_setup(void) {
@@ -42,8 +40,10 @@ void gpio_setup(void) {
 
     /* green led */
     gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GREEN_LED);
-    gpio_clear(GPIOD, GREEN_LED);
-
+    gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, ORANGE_LED);
+    
+    /* soil scan*/
+    gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO0);
 }   
 
 
