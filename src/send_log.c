@@ -1,19 +1,48 @@
-#include "send_log.h"
+#include "app_log.h"
 
-void usart_setup(void) {
-    usart_set_baudrate(USART2, 115200);
-    usart_set_databits(USART2, 8);
-    usart_set_stopbits(USART2, USART_STOPBITS_1);
-    usart_set_parity(USART2, USART_PARITY_NONE);
-    usart_set_flow_control(USART2, USART_FLOWCONTROL_NONE);
-    usart_set_mode(USART2, USART_MODE_TX);
-    usart_enable(USART2);
-}
+void create_log(char *buf, size_t buf_size, DataSoil_t curr_humidity) {
+    const char prefix[] = "[START_INFO] 2025-04-26 14:30:34 | Humidity is:";
+    const char postfix[] = "\%[END_INFO]\r\n";
 
-void usart_transmit(const char *str) {
-    while (*str) {
-        usart_send_blocking(USART2, *str++);
+    size_t prefix_len = strlen(prefix);
+    size_t postfix_len = strlen(postfix);
+
+    memcpy(buf, prefix, prefix_len);
+    buf+= prefix_len;
+    buf_size -= prefix_len;
+    int num = curr_humidity.humidity_lvl;
+
+    if (num == 0) {
+        *buf++ = '0';
+    } else {
+        char tmp[10];
+        uint8_t i = 0;
+        while (num > 0 && sizeof(tmp)-1) {
+            tmp[i++] = '0' + (num % 10);
+            num /= 10;
+        }
+        while (i-- > 0 && i < sizeof(tmp)-1) {
+            *buf++ = tmp[i];
+            buf_size--;
+        }
     }
-    usart_send_blocking(USART2, '\r');
-    usart_send_blocking(USART2, '\n');
+    memcpy(buf, postfix, postfix_len);
+    buf+= postfix_len;
+    buf_size -= postfix_len;
+    *buf = '\0';
 }
+
+void send_log_queue(const char *log) {
+    for (; *log; ++log) {
+        while (xQueueSend(xLogData, log, pdMS_TO_TICKS(100)) != pdPASS) {
+            vTaskDelay(10);
+        }
+    }
+}
+
+
+
+
+
+
+

@@ -2,7 +2,13 @@ BINARY       = $(BUILD_DIR)/main
 SRC_DIR      = src
 BUILD_DIR    = build
 INC_DIR      = include
-SRCFILES     := $(wildcard $(SRC_DIR)/*.c)
+RTOS_SUBDIR  = rtos
+SRCFILES     := $(wildcard $(SRC_DIR)/*.c) \
+				$(SRC_DIR)/rtos/tasks.c \
+				$(SRC_DIR)/rtos/queue.c \
+				$(SRC_DIR)/rtos/list.c \
+				$(SRC_DIR)/rtos/port.c \
+				$(SRC_DIR)/rtos/heap_4.c \
 
 PREFIX       ?= arm-none-eabi
 TOP_DIR      := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
@@ -10,7 +16,7 @@ OPENCM3_DIR  := ./libopencm3
 LIBNAME      = opencm3_stm32f4
 DEFS        += -DSTM32F4
 
-FP_FLAGS ?= -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+FP_FLAGS    ?= -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 ARCH_FLAGS  = -mthumb -mcpu=cortex-m4 $(FP_FLAGS) -mfix-cortex-m3-ldrd
 ASFLAGS     = -mthumb -mcpu=cortex-m3
 
@@ -47,6 +53,8 @@ TGT_CPPFLAGS += -I$(OPENCM3_DIR)/include -I$(INC_DIR)
 
 TGT_LDFLAGS   = --static -nostartfiles -T$(LDSCRIPT) $(ARCH_FLAGS) \
                 -Wl,-Map=$(BINARY).map -Wl,--gc-sections
+TGT_CFLAGS  += -I$(SRC_DIR)/rtos -I$(SRC_DIR)
+TGT_CFLAGS  += -fno-strict-aliasing
 
 LDLIBS      += -specs=nosys.specs
 LDLIBS      += -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
@@ -58,6 +66,12 @@ all: $(BINARY).elf
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
+
+$(BUILD_DIR)/$(RTOS_SUBDIR):
+	@mkdir -p $@
+
+$(BUILD_DIR)/$(RTOS_SUBDIR)/%.o: $(SRC_DIR)/$(RTOS_SUBDIR)/%.c | $(BUILD_DIR)/$(RTOS_SUBDIR)
+	$(CC) $(TGT_CFLAGS) $(TGT_CPPFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
 	$(CC) $(TGT_CFLAGS) $(TGT_CPPFLAGS) -c $< -o $@
@@ -86,5 +100,5 @@ bigflash: $(BINARY).bin
 
 clean:
 	rm -rf $(BUILD_DIR) $(BINARY).elf $(BINARY).bin $(BINARY).hex $(BINARY).srec $(BINARY).list
-
--include $(OBJS:.o=.d")
+-include $(DEPS)include $(DEPS)
+#-include $(OBJS:.o=.d")
