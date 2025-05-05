@@ -10,13 +10,13 @@ void create_log(char *buf, size_t buf_size, DataSoil_t curr_humidity) {
     memcpy(buf, prefix, prefix_len);
     buf+= prefix_len;
     buf_size -= prefix_len;
-    
     int num = curr_humidity.humidity_lvl;
+
     if (num == 0) {
         *buf++ = '0';
     } else {
         char tmp[10];
-        unsigned int i = 0;
+        uint8_t i = 0;
         while (num > 0 && sizeof(tmp)-1) {
             tmp[i++] = '0' + (num % 10);
             num /= 10;
@@ -35,10 +35,9 @@ void create_log(char *buf, size_t buf_size, DataSoil_t curr_humidity) {
 void send_log_queue(const char *log) {
     for (; *log; ++log) {
         while (xQueueSend(xLogData, log, pdMS_TO_TICKS(100)) != pdPASS) {
-            vTaskDelay(1);
+            vTaskDelay(10);
         }
     }
-
 }
 
 
